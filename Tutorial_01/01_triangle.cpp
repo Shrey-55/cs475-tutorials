@@ -3,11 +3,14 @@
 
 float points[] = {
     0.0f,  0.5f,  0.0f,
-    0.5f, -0.5f,  0.0f,
-    -0.5f, -0.5f,  0.0f
+    0.5f, 0.0f,  0.0f,
+    -0.5f, 0.0f,  0.0f,
+    0.0f,  -0.5f,  0.0f
   };
 
 GLuint shaderProgram;
+GLuint shaderProgram2;
+
 GLuint vbo, vao;
 
 void initShadersGL(void)
@@ -20,6 +23,15 @@ void initShadersGL(void)
   shaderList.push_back(csX75::LoadShaderGL(GL_FRAGMENT_SHADER, fragment_shader_file));
 
   shaderProgram = csX75::CreateProgramGL(shaderList);
+
+  // std::string vertex_shader_file("simple_vs.glsl");
+  std::string fragment_shader_file2("simple_fs2.glsl");
+
+  std::vector<GLuint> shaderList2;
+  shaderList2.push_back(csX75::LoadShaderGL(GL_VERTEX_SHADER, vertex_shader_file));
+  shaderList2.push_back(csX75::LoadShaderGL(GL_FRAGMENT_SHADER, fragment_shader_file2));
+
+  shaderProgram2 = csX75::CreateProgramGL(shaderList2);
   
 }
 
@@ -30,7 +42,7 @@ void initVertexBufferGL(void)
   //Set it as the current buffer to be used by binding it
   glBindBuffer (GL_ARRAY_BUFFER, vbo);
   //Copy the points into the current buffer - 9 float values, start pointer and static data
-  glBufferData (GL_ARRAY_BUFFER, 9 * sizeof (float), points, GL_STATIC_DRAW);
+  glBufferData (GL_ARRAY_BUFFER, 12 * sizeof (float), points, GL_STATIC_DRAW);
 
   //Ask GL for a Vertex Attribute Object (vao)
   glGenVertexArrays (1, &vao);
@@ -53,6 +65,11 @@ void renderGL(void)
 
   // Draw points 0-3 from the currently bound VAO with current in-use shader
   glDrawArrays(GL_TRIANGLES, 0, 3);
+
+  glUseProgram(shaderProgram2);
+  glBindVertexArray (vao);
+
+  glDrawArrays(GL_TRIANGLES, 1, 4);
 }
 
 int main(int argc, char** argv)
